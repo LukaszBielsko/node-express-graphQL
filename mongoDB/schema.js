@@ -1,9 +1,11 @@
+const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const PuppetSchema = new Schema({
     id: ObjectId,
-    title: String,
+    name: String,
 });
 
-module.exports = mongoose.model('Puppet');
+module.exports = mongoose.model('Puppet', PuppetSchema);

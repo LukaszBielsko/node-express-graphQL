@@ -1,10 +1,11 @@
 const express = require('express')
 const app = express()
-const db = require('mongoose');
+const mongoose = require('mongoose');
 const graphqlHTTP = require('express-graphql');
 
 const schema = require('./graphQL/schema')
-const rootValue = require('./graphQL/root')
+const rootValue = require('./graphQL/resolvers')
+const setupDB = require('./mongoDB/connect')
 
 const port = 3000
 
@@ -22,16 +23,21 @@ app.route('/')
         res.json(exObj)
     })
 
-// conect to db
-db.connect('mongodb://localhost/my_db', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+// conect to mongoose
+// mongoose.connect('mongodb://localhost:27017/my_db', {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// }).catch( error => console.log(error))
+
+// const db = mongoose.connection
+// db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+setupDB()
 
 // graphql api 
-app.use('/graphql', graphqlHTTP({
-    schema,
-    rootValue,
+app.use('/graphql', graphqlHTTP({ // graphql server 
+    schema, // well, schema :)
+    rootValue, //resolvers 
     graphiql: true,
 }));
 
